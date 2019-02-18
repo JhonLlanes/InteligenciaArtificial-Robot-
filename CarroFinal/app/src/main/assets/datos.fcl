@@ -1,0 +1,53 @@
+		FUNCTION_BLOCK datos
+		VAR_INPUT
+		izquierda:REAL;
+		END_VAR
+		VAR_INPUT
+		derecha:REAL;
+		END_VAR
+		VAR_OUTPUT
+		angulo:REAL;
+		END_VAR
+		FUZZIFY izquierda	
+		TERM cerca := gauss 10 3;
+		TERM mediocerca := gauss 20 3;
+		TERM medio := gauss 30 3;
+		TERM mediolejos := gauss 40 3;
+		TERM lejos := gauss 50 3;
+		END_FUZZIFY
+		FUZZIFY derecha
+		TERM cerca := gauss 10 3;
+		TERM mediocerca := gauss 20 3;
+		TERM medio := gauss 30 3;
+		TERM mediolejos := gauss 40 3;
+		TERM lejos := gauss 50 3;
+		END_FUZZIFY
+		DEFUZZIFY angulo	
+		TERM izquierda := gbell 15 4 5;
+		TERM pocoizq := gbell 15 4 40;
+		TERM centroizq := gbell 15 4 70;
+		TERM centroder := gbell 15 4 100;
+		TERM pocoder := gbell 15 4 130;
+		TERM derecha := gbell 15 4 175;
+		METHOD : COG;
+		DEFAULT:=0;
+		END_DEFUZZIFY
+		RULEBLOCK Grupo1
+		AND:MIN;
+		ACT:MIN;
+		ACCU:MAX;
+		RULE R1: IF izquierda IS cerca AND derecha IS cerca THEN angulo IS centroizq;
+		RULE R2: IF izquierda IS cerca AND derecha IS mediocerca THEN angulo IS centroizq;
+		RULE R3: IF izquierda IS cerca AND derecha IS medio THEN angulo IS pocoizq;	
+		RULE R4: IF izquierda IS cerca AND derecha IS mediolejos THEN angulo IS derecha;
+		RULE R5: IF izquierda IS cerca AND derecha IS lejos THEN angulo IS derecha;	
+		RULE R6: IF izquierda IS mediocerca AND derecha IS cerca THEN angulo IS centroizq;
+		RULE R7: IF izquierda IS mediocerca AND derecha IS mediocerca THEN angulo IS pocoizq;
+		RULE R8: IF izquierda IS mediocerca AND derecha IS medio THEN angulo IS pocoizq;
+		RULE R9: IF izquierda IS mediocerca AND derecha IS mediolejos THEN angulo IS derecha;	
+		RULE R10: IF izquierda IS mediocerca AND derecha IS lejos THEN angulo IS pocoder;
+		RULE R11: IF izquierda IS medio AND derecha IS cerca THEN angulo IS pocoizq;
+		RULE R12: IF izquierda IS medio AND derecha IS mediocerca THEN angulo IS pocoizq;RULE R13: IF izquierda IS medio AND derecha IS medio THEN angulo IS centroder;	RULE R14: IF izquierda IS medio AND derecha IS mediolejos THEN angulo IS pocoder;RULE R15: IF izquierda IS medio AND derecha IS lejos THEN angulo IS pocoder;RULE R16: IF izquierda IS mediolejos AND derecha IS cerca THEN angulo IS pocoizq;RULE R17: IF izquierda IS mediolejos AND derecha IS mediocerca THEN angulo IS izquierda;RULE R18: IF izquierda IS mediolejos AND derecha IS medio THEN angulo IS pocoder;	RULE R19: IF izquierda IS mediolejos AND derecha IS mediolejos THEN angulo IS pocoder;RULE R20: IF izquierda IS mediolejos AND derecha IS lejos THEN angulo IS centroder;RULE R21: IF izquierda IS lejos AND derecha IS cerca THEN angulo IS izquierda;RULE R22: IF izquierda IS lejos AND derecha IS mediocerca THEN angulo IS izquierda;RULE R23: IF izquierda IS lejos AND derecha IS medio THEN angulo IS pocoder;RULE R24: IF izquierda IS lejos AND derecha IS mediolejos THEN angulo IS centroder;	
+		RULE R25: IF izquierda IS lejos AND derecha IS lejos THEN angulo IS centroder;	
+		END_RULEBLOCK
+		END_FUNCTION_BLOCK
